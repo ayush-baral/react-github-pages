@@ -7,13 +7,10 @@ on:
 
 jobs:
   build-app:
-    # The runs-on represents a runner. A runner is a virtual server hosted by GitHub that runs your workflows when they are triggered by an event.
-    #  You can set up your job to run on Ubuntu Linux, Microsoft Windows, and macOS virtual machines.
-    runs-on: [ubuntu-latest]
+    runs-on: ubuntu-latest
 
     steps:
-      # checkout the repository content to github runner
-      - name: checkout Repo
+      - name: Checkout Repo
         uses: actions/checkout@v2
 
       - name: Install pnpm
@@ -21,8 +18,24 @@ jobs:
         with:
           version: 8
 
-      - name: install dependencies
+      - name: Install dependencies
         run: pnpm install
 
       - name: Build Application
         run: pnpm run build
+
+  deploy-app:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Built App
+        uses: actions/download-artifact@v2
+        with:
+          name: built-app
+          path: ./dist
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
