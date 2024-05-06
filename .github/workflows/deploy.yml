@@ -24,6 +24,12 @@ jobs:
       - name: Build Application
         run: pnpm run build
 
+      - name: Upload Build Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: built-app
+          path: ./dist
+
   deploy-app:
     runs-on: ubuntu-latest
 
